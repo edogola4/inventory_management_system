@@ -9,8 +9,8 @@ class Category(Base):
     __tablename__ = 'categories'
 
     id = Column(Integer, primary_key=True)
-    _name = Column("name", String(50), nullable=False, unique=True)
-    _description = Column("description", String(255))
+    name = Column("name", String(50), nullable=False, unique=True)
+    description = Column("description", String(255))
     
     # Relationship with Product
     products = relationship("Product", back_populates="category", cascade="all, delete-orphan")

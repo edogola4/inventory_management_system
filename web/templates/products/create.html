@@ -7,7 +7,6 @@
     <div class="col-md-8 offset-md-2">
         <h1>Add New Product</h1>
         <form action="{{ url_for('new_product') }}" method="post">
-
             <div class="mb-3">
                 <label for="name" class="form-label">Product Name</label>
                 <input type="text" name="name" id="name" class="form-control" required>
@@ -28,6 +27,11 @@
                     <option value="{{ category.id }}">{{ category.name }}</option>
                     {% endfor %}
                 </select>
+            </div>
+            <!-- Added description field for form consistency -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" class="form-control" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Create Product</button>
             <a href="{{ url_for('list_products') }}" class="btn btn-secondary">Cancel</a>

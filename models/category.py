@@ -1,15 +1,16 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.exc import SQLAlchemyError
+
 from models.base import Base, Session
 
 class Category(Base):
     """Category model representing product categories."""
     __tablename__ = 'categories'
-    
+
     id = Column(Integer, primary_key=True)
-    _name = Column('name', String(50), nullable=False, unique=True)
-    _description = Column('description', String(255))
+    _name = Column("name", String(50), nullable=False, unique=True)
+    _description = Column("description", String(255))
     
     # Relationship with Product
     products = relationship("Product", back_populates="category", cascade="all, delete-orphan")
@@ -17,17 +18,17 @@ class Category(Base):
     @property
     def name(self):
         return self._name
-        
+    
     @name.setter
     def name(self, value):
         if not value or not isinstance(value, str) or len(value) < 2:
             raise ValueError("Category name must be a string with at least 2 characters")
         self._name = value
-        
+    
     @property
     def description(self):
         return self._description
-        
+    
     @description.setter
     def description(self, value):
         if value and not isinstance(value, str):
@@ -54,7 +55,6 @@ class Category(Base):
         """Get all categories with their products eagerly loaded."""
         session = Session()
         try:
-            # Use joinedload to eagerly load the products relationship
             categories = session.query(cls).options(joinedload(cls.products)).all()
             return categories
         finally:
@@ -112,6 +112,6 @@ class Category(Base):
             raise e
         finally:
             session.close()
-    
+            
     def __repr__(self):
         return f"<Category id={self.id}, name={self.name}>"

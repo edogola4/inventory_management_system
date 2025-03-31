@@ -30,7 +30,6 @@ def new_category():
     if request.method == 'POST':
         try:
             name = request.form['name']
-            # Use get() to safely retrieve description; defaults to empty string if missing.
             description = request.form.get('description', '')
             
             if Category.find_by_name(name):
@@ -73,15 +72,9 @@ def edit_category(id):
                 flash(f"Category name '{name}' is already taken", "error")
                 return render_template('categories/edit.html', category=category)
             
-            # Store the ID before update operation
-            category_id = category.id
-            
-            # Update the category
             category.update(name=name, description=description)
-            
             flash("Category updated successfully!", "success")
-            # Use the stored ID for the redirect
-            return redirect(url_for('view_category', id=category_id))
+            return redirect(url_for('view_category', id=category.id))
         except ValueError as e:
             flash(str(e), "error")
     
@@ -123,7 +116,6 @@ def new_product():
             name = request.form['name']
             price = float(request.form['price'])
             quantity = int(request.form['quantity'])
-            # Use get() to retrieve description safely.
             description = request.form.get('description', '')
             category_id = int(request.form['category_id'])
             
@@ -177,9 +169,6 @@ def edit_product(id):
                 flash(f"Category with ID {category_id} does not exist", "error")
                 return render_template('products/edit.html', product=product, categories=categories)
             
-            # Store the ID before update
-            product_id = product.id
-            
             product.update(
                 name=name,
                 price=price,
@@ -188,8 +177,7 @@ def edit_product(id):
                 category_id=category_id
             )
             flash("Product updated successfully!", "success")
-            # Use the stored ID for the redirect
-            return redirect(url_for('view_product', id=product_id))
+            return redirect(url_for('view_product', id=product.id))
         except (ValueError, TypeError) as e:
             flash(str(e), "error")
     
@@ -230,6 +218,9 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('500.html'), 500
+
+# Initialize database tables before starting the app
+init_db()
 
 if __name__ == '__main__':
     app.run(debug=True)

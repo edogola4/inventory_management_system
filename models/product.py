@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 import datetime
 
@@ -10,10 +10,10 @@ class Product(Base):
     __tablename__ = 'products'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    _name = Column("name", String(100), nullable=False)
     description = Column(String(255))
-    price = Column(Float, nullable=False)
-    quantity = Column(Integer, default=0)
+    _price = Column("price", Float, nullable=False)
+    _quantity = Column("quantity", Integer, default=0)
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
@@ -27,9 +27,9 @@ class Product(Base):
     
     @name.setter
     def name(self, value):
-        if not value or not isinstance(value, str) or len(value) < 2:
+        if not value or not isinstance(value, str) or len(value.strip()) < 2:
             raise ValueError("Product name must be a string with at least 2 characters")
-        self._name = value
+        self._name = value.strip()
     
     @property
     def price(self):
@@ -64,13 +64,12 @@ class Product(Base):
         """Create a new product."""
         session = Session()
         try:
-            product = cls(
-                name=name,
-                price=price,
-                category_id=category_id,
-                description=description,
-                quantity=quantity
-            )
+            product = cls()
+            product.name = name
+            product.price = price
+            product.category_id = category_id
+            product.description = description
+            product.quantity = quantity
             session.add(product)
             session.commit()
             return product
@@ -82,30 +81,30 @@ class Product(Base):
     
     @classmethod
     def get_all(cls):
-        """Get all products."""
+        """Get all products with their category eagerly loaded."""
         session = Session()
         try:
-            products = session.query(cls).all()
+            products = session.query(cls).options(joinedload(cls.category)).all()
             return products
         finally:
             session.close()
     
     @classmethod
     def find_by_id(cls, id):
-        """Find a product by ID."""
+        """Find a product by ID with its category eagerly loaded."""
         session = Session()
         try:
-            product = session.query(cls).filter_by(id=id).first()
+            product = session.query(cls).options(joinedload(cls.category)).filter_by(id=id).first()
             return product
         finally:
             session.close()
     
     @classmethod
     def find_by_category(cls, category_id):
-        """Find products by category ID."""
+        """Find products by category ID with their category eagerly loaded."""
         session = Session()
         try:
-            products = session.query(cls).filter_by(category_id=category_id).all()
+            products = session.query(cls).options(joinedload(cls.category)).filter_by(category_id=category_id).all()
             return products
         finally:
             session.close()

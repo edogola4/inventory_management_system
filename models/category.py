@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.exc import SQLAlchemyError
-
 from models.base import Base, Session
 
 class Category(Base):
@@ -9,8 +8,8 @@ class Category(Base):
     __tablename__ = 'categories'
 
     id = Column(Integer, primary_key=True)
-    name = Column("name", String(50), nullable=False, unique=True)
-    description = Column("description", String(255))
+    _name = Column("name", String(50), nullable=False, unique=True)
+    _description = Column("description", String(255))
     
     # Relationship with Product
     products = relationship("Product", back_populates="category", cascade="all, delete-orphan")
@@ -21,9 +20,9 @@ class Category(Base):
     
     @name.setter
     def name(self, value):
-        if not value or not isinstance(value, str) or len(value) < 2:
+        if not value or not isinstance(value, str) or len(value.strip()) < 2:
             raise ValueError("Category name must be a string with at least 2 characters")
-        self._name = value
+        self._name = value.strip()
     
     @property
     def description(self):
@@ -33,14 +32,17 @@ class Category(Base):
     def description(self, value):
         if value and not isinstance(value, str):
             raise ValueError("Description must be a string")
-        self._description = value
+        self._description = value.strip() if value else value
     
     @classmethod
     def create(cls, name, description=""):
         """Create a new category."""
         session = Session()
         try:
-            category = cls(name=name, description=description)
+            # Create a blank instance, then set properties so that setters are used.
+            category = cls()
+            category.name = name
+            category.description = description
             session.add(category)
             session.commit()
             return category

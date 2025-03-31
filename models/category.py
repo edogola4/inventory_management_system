@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 
 from models.base import Base, Session
@@ -52,10 +52,11 @@ class Category(Base):
     
     @classmethod
     def get_all(cls):
-        """Get all categories."""
+        """Get all categories with their products eagerly loaded."""
         session = Session()
         try:
-            categories = session.query(cls).all()
+            # Eagerly load the 'products' relationship
+            categories = session.query(cls).options(joinedload(cls.products)).all()
             return categories
         finally:
             session.close()

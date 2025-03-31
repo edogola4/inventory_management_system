@@ -1,8 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from models import Category, Product, init_db
+from datetime import datetime
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'inventory_pro_secret_key'
+
+# Context processor to inject current datetime into templates
+@app.context_processor
+def inject_now():
+    return {'now': datetime.utcnow()}
 
 @app.route('/')
 def index():

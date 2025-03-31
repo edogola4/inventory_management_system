@@ -73,9 +73,15 @@ def edit_category(id):
                 flash(f"Category name '{name}' is already taken", "error")
                 return render_template('categories/edit.html', category=category)
             
+            # Store the ID before update operation
+            category_id = category.id
+            
+            # Update the category
             category.update(name=name, description=description)
+            
             flash("Category updated successfully!", "success")
-            return redirect(url_for('view_category', id=category.id))
+            # Use the stored ID for the redirect
+            return redirect(url_for('view_category', id=category_id))
         except ValueError as e:
             flash(str(e), "error")
     
@@ -171,6 +177,9 @@ def edit_product(id):
                 flash(f"Category with ID {category_id} does not exist", "error")
                 return render_template('products/edit.html', product=product, categories=categories)
             
+            # Store the ID before update
+            product_id = product.id
+            
             product.update(
                 name=name,
                 price=price,
@@ -179,7 +188,8 @@ def edit_product(id):
                 category_id=category_id
             )
             flash("Product updated successfully!", "success")
-            return redirect(url_for('view_product', id=product.id))
+            # Use the stored ID for the redirect
+            return redirect(url_for('view_product', id=product_id))
         except (ValueError, TypeError) as e:
             flash(str(e), "error")
     

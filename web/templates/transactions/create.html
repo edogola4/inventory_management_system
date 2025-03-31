@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}New Transaction - Inventory{% endblock %}
+{% block content %}
+<h2>Record Transaction</h2>
+<form method="POST" action="{{ url_for('new_transaction') }}">
+  <div class="mb-3">
+    <label for="product_id" class="form-label">Product</label>
+    <select class="form-select" id="product_id" name="product_id" required>
+      <option value="">Select a product</option>
+      {% for product in products %}
+        <option value="{{ product.id }}">{{ product.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="supplier_id" class="form-label">Supplier (if purchase)</label>
+    <select class="form-select" id="supplier_id" name="supplier_id">
+      <option value="">None</option>
+      {% for supplier in suppliers %}
+        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="transaction_type" class="form-label">Transaction Type</label>
+    <select class="form-select" id="transaction_type" name="transaction_type" required>
+      <option value="purchase">Purchase</option>
+      <option value="sale">Sale</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="quantity" class="form-label">Quantity</label>
+    <input type="number" class="form-control" id="quantity" name="quantity" required>
+  </div>
+  <div class="mb-3">
+    <label for="price_per_unit" class="form-label">Price Per Unit</label>
+    <input type="number" step="0.01" class="form-control" id="price_per_unit" name="price_per_unit" required>
+  </div>
+  <button type="submit" class="btn btn-success">Record Transaction</button>
+</form>
+{% endblock %}

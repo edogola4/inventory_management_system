@@ -6,7 +6,8 @@
 <div class="row">
     <div class="col-md-8 offset-md-2">
         <h1>Add New Product</h1>
-        <form action="{{ url_for('create_product') }}" method="post">
+        <form action="{{ url_for('new_product') }}" method="post">
+
             <div class="mb-3">
                 <label for="name" class="form-label">Product Name</label>
                 <input type="text" name="name" id="name" class="form-control" required>

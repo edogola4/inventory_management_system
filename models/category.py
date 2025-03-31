@@ -38,8 +38,8 @@ class Category(Base):
     @classmethod
     def create(cls, name, description=""):
         """Create a new category."""
+        session = Session()
         try:
-            session = Session()
             category = cls(name=name, description=description)
             session.add(category)
             session.commit()
@@ -55,7 +55,7 @@ class Category(Base):
         """Get all categories with their products eagerly loaded."""
         session = Session()
         try:
-            # Eagerly load the 'products' relationship
+            # Use joinedload to eagerly load the products relationship
             categories = session.query(cls).options(joinedload(cls.products)).all()
             return categories
         finally:
@@ -63,10 +63,13 @@ class Category(Base):
     
     @classmethod
     def find_by_id(cls, id):
-        """Find a category by ID."""
+        """Find a category by ID with its products eagerly loaded."""
         session = Session()
         try:
-            category = session.query(cls).filter_by(id=id).first()
+            category = session.query(cls)\
+                .options(joinedload(cls.products))\
+                .filter_by(id=id)\
+                .first()
             return category
         finally:
             session.close()

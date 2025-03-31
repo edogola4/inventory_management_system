@@ -30,7 +30,8 @@ def new_category():
     if request.method == 'POST':
         try:
             name = request.form['name']
-            description = request.form['description']
+            # Use get() to safely retrieve description; defaults to empty string if missing.
+            description = request.form.get('description', '')
             
             if Category.find_by_name(name):
                 flash(f"Category '{name}' already exists", "error")
@@ -64,7 +65,7 @@ def edit_category(id):
     if request.method == 'POST':
         try:
             name = request.form['name']
-            description = request.form['description']
+            description = request.form.get('description', '')
             
             # Check if new name is already taken by another category
             existing = Category.find_by_name(name)
@@ -116,7 +117,8 @@ def new_product():
             name = request.form['name']
             price = float(request.form['price'])
             quantity = int(request.form['quantity'])
-            description = request.form['description']
+            # Use get() to retrieve description safely.
+            description = request.form.get('description', '')
             category_id = int(request.form['category_id'])
             
             if not Category.find_by_id(category_id):
@@ -145,7 +147,6 @@ def view_product(id):
     if not product:
         flash(f"Product with ID {id} not found", "error")
         return redirect(url_for('list_products'))
-    
     return render_template('products/view.html', product=product)
 
 @app.route('/products/<int:id>/edit', methods=['GET', 'POST'])
@@ -163,7 +164,7 @@ def edit_product(id):
             name = request.form['name']
             price = float(request.form['price'])
             quantity = int(request.form['quantity'])
-            description = request.form['description']
+            description = request.form.get('description', '')
             category_id = int(request.form['category_id'])
             
             if not Category.find_by_id(category_id):
@@ -177,7 +178,6 @@ def edit_product(id):
                 description=description,
                 category_id=category_id
             )
-            
             flash("Product updated successfully!", "success")
             return redirect(url_for('view_product', id=product.id))
         except (ValueError, TypeError) as e:

@@ -10,6 +10,7 @@ tabulate = "*"
 flask = "*"
 flask-wtf = "*"
 python-dotenv = "*"
+colorama = "*"
 
 [dev-packages]
 pytest = "*"

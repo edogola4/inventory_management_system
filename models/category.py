@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.exc import SQLAlchemyError
-from models.base import Base, Session
+from models.base import Base, SessionLocal
 
 class Category(Base):
     """Category model representing product categories."""
@@ -37,7 +37,7 @@ class Category(Base):
     @classmethod
     def create(cls, name, description=""):
         """Create a new category."""
-        session = Session()
+        session = SessionLocal()
         try:
             # Create a blank instance, then set properties so that setters are used.
             category = cls()
@@ -55,7 +55,7 @@ class Category(Base):
     @classmethod
     def get_all(cls):
         """Get all categories with their products eagerly loaded."""
-        session = Session()
+        session = SessionLocal()
         try:
             categories = session.query(cls).options(joinedload(cls.products)).all()
             return categories
@@ -65,7 +65,7 @@ class Category(Base):
     @classmethod
     def find_by_id(cls, id):
         """Find a category by ID with its products eagerly loaded."""
-        session = Session()
+        session = SessionLocal()
         try:
             category = session.query(cls)\
                 .options(joinedload(cls.products))\
@@ -78,7 +78,7 @@ class Category(Base):
     @classmethod
     def find_by_name(cls, name):
         """Find a category by name."""
-        session = Session()
+        session = SessionLocal()
         try:
             category = session.query(cls).filter(cls._name == name).first()
             return category
@@ -87,7 +87,7 @@ class Category(Base):
     
     def update(self, name=None, description=None):
         """Update the category."""
-        session = Session()
+        session = SessionLocal()
         try:
             if name:
                 self.name = name
@@ -104,7 +104,7 @@ class Category(Base):
     
     def delete(self):
         """Delete the category."""
-        session = Session()
+        session = SessionLocal()
         try:
             session.delete(self)
             session.commit()

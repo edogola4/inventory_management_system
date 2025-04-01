@@ -1,9 +1,10 @@
+# models/product.py
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 import datetime
 
-from models.base import Base, Session
+from models.base import Base, SessionLocal
 
 class Product(Base):
     """Product model representing inventory items."""
@@ -18,9 +19,24 @@ class Product(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     
-    # Relationship with Category
-    category = relationship("Category", back_populates="products")
+    # Add these new fields
+    reorder_level = Column(Integer, default=10)
+    reorder_quantity = Column(Integer, default=20)
     
+    # Relationships
+    category = relationship("Category", back_populates="products")
+    suppliers = relationship("Supplier", secondary="supplier_product", back_populates="products")
+    transaction_items = relationship("TransactionItem", back_populates="product")
+    
+    # Correct many-to-many relationship to Transaction through transaction_items
+    transactions = relationship(
+        "Transaction",
+        secondary="transaction_items",
+        primaryjoin="Product.id == TransactionItem.product_id",
+        secondaryjoin="TransactionItem.transaction_id == Transaction.id",
+        viewonly=True  # Make this viewonly to prevent cascade conflicts
+    )
+
     @property
     def name(self):
         return self._name
@@ -62,7 +78,7 @@ class Product(Base):
     @classmethod
     def create(cls, name, price, category_id, description="", quantity=0):
         """Create a new product."""
-        session = Session()
+        session = SessionLocal()
         try:
             product = cls()
             product.name = name
@@ -82,7 +98,7 @@ class Product(Base):
     @classmethod
     def get_all(cls):
         """Get all products with their category eagerly loaded."""
-        session = Session()
+        session = SessionLocal()
         try:
             products = session.query(cls).options(joinedload(cls.category)).all()
             return products
@@ -92,7 +108,7 @@ class Product(Base):
     @classmethod
     def find_by_id(cls, id):
         """Find a product by ID with its category eagerly loaded."""
-        session = Session()
+        session = SessionLocal()
         try:
             product = session.query(cls).options(joinedload(cls.category)).filter_by(id=id).first()
             return product
@@ -102,7 +118,7 @@ class Product(Base):
     @classmethod
     def find_by_category(cls, category_id):
         """Find products by category ID with their category eagerly loaded."""
-        session = Session()
+        session = SessionLocal()
         try:
             products = session.query(cls).options(joinedload(cls.category)).filter_by(category_id=category_id).all()
             return products
@@ -111,7 +127,7 @@ class Product(Base):
     
     def update(self, name=None, price=None, description=None, quantity=None, category_id=None):
         """Update the product."""
-        session = Session()
+        session = SessionLocal()
         try:
             if name:
                 self.name = name
@@ -136,7 +152,7 @@ class Product(Base):
     
     def delete(self):
         """Delete the product."""
-        session = Session()
+        session = SessionLocal()
         try:
             session.delete(self)
             session.commit()

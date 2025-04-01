@@ -1,0 +1,52 @@
+<!-- web/templates/transactions/new.html -->
+{% extends 'base.html' %}
+
+{% block title %}New Transaction{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>New Transaction</h1>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="transaction_type">Transaction Type</label>
+            <select name="transaction_type" id="transaction_type" class="form-control" required>
+                <option value="{{ transaction_types.PURCHASE.value }}">Purchase</option>
+                <option value="{{ transaction_types.SALE.value }}">Sale</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="product_id">Product</label>
+            <select name="product_id" id="product_id" class="form-control" required>
+                {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }} (Current stock: {{ product.quantity }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity" id="quantity" class="form-control" min="1" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="price_per_unit">Price Per Unit ($)</label>
+            <input type="number" name="price_per_unit" id="price_per_unit" class="form-control" step="0.01" min="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="reference_number">Reference Number</label>
+            <input type="text" name="reference_number" id="reference_number" class="form-control">
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea name="notes" id="notes" class="form-control" rows="3"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Create Transaction</button>
+        <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

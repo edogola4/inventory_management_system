@@ -1,26 +1,29 @@
-from sqlalchemy import Column, Integer, String, Table, ForeignKey
+# models/supplier.py
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from models.base import Base
 
-# Association table for many-to-many between Products and Suppliers
-product_supplier_association = Table(
-    'product_supplier', Base.metadata,
-    Column('product_id', Integer, ForeignKey('products.id')),
-    Column('supplier_id', Integer, ForeignKey('suppliers.id'))
+# Many-to-many relationship between suppliers and products
+supplier_product = Table(
+    'supplier_product',
+    Base.metadata,
+    Column('supplier_id', Integer, ForeignKey('suppliers.id'), primary_key=True),
+    Column('product_id', Integer, ForeignKey('products.id'), primary_key=True)
 )
 
 class Supplier(Base):
-    __tablename__ = 'suppliers'
-
+    __tablename__ = "suppliers"
+    
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False, unique=True)
-    contact_info = Column(String(255))
+    name = Column(String(100), nullable=False)
+    contact_name = Column(String(100))
+    email = Column(String(100))
+    phone = Column(String(20))
+    address = Column(String(255))
+    is_active = Column(Boolean, default=True)
     
-    # Many-to-many with Products
-    products = relationship("Product", secondary=product_supplier_association, back_populates="suppliers")
-    
-    # One-to-many: a supplier can have many transactions (for purchases)
+    # Relationships
+    products = relationship("Product", secondary=supplier_product, back_populates="suppliers")
     transactions = relationship("Transaction", back_populates="supplier")
-    
-    def __repr__(self):
-        return f"<Supplier id={self.id}, name={self.name}>"
+
+    SessionLocal = None

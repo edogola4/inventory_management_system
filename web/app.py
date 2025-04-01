@@ -1,9 +1,58 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from models import Category, Product, init_db
+#from sqlalchemy import Engine
+#from sqlalchemy import engine
+from sqlalchemy import create_engine
+#from models import Category, Product, Transaction, Supplier, init_db
+from models import Category, Product, Transaction, Supplier, SessionLocal, init_db  # <-- Corrected import
 from datetime import datetime
+from models.base import Base
+from routes import transaction, supplier, stock_alert
+from web.routes.transaction_routes import transaction_bp
+from routes.transaction import router as transaction_router
+
+
+
+# Create database tables
+#Base.metadata.create_all(bind=Engine)
+#Base.metadata.create_all(bind=engine)
+
+#engine = create_engine("sqlite:///inventory.db", echo=True)
+engine = create_engine("sqlite:///inventory.db", echo=True)
+
+Base.metadata.create_all(bind=engine)
+
+#app = FastAPI(title="Inventory Management System")
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'inventory_pro_secret_key'
+
+
+# Add CORS middleware
+#app.add_middleware(
+  #  CORSMiddleware, # type: ignore
+   # allow_origins=["*"],
+   # allow_credentials=True,
+  #  allow_methods=["*"],
+  #  allow_headers=["*"],
+#)
+
+# Include routers
+#app.include_router(transaction.router)     # Add transaction routes
+app.register_blueprint(transaction.router)
+#app.include_router(supplier.router)        # Add supplier routes
+app.register_blueprint(supplier.router)
+#app.include_router(stock_alert.router)    # Add stock alerts routes
+app.register_blueprint(stock_alert.router)
+
+app.register_blueprint(transaction_bp)
+#app.register_blueprint(transaction_router)
+
+
+# Initialize database
+with app.app_context():
+    init_db()  # Ensure the database tables are created
+
+
 
 # Context processor to inject current datetime into templates
 @app.context_processor

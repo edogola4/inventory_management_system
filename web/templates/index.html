@@ -1,130 +1,716 @@
 {% extends 'base.html' %}
+
 {% block title %}InventoryPro - Home{% endblock %}
+
+{% block head %}
+  {{ super() }}
+  <style>
+    /* Custom Animation Styles */
+    .welcome-card {
+        background: linear-gradient(135deg, #4a6bff, #2541b2);
+        color: white;
+        box-shadow: 0 10px 20px rgba(37, 65, 178, 0.2);
+        border: none;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .welcome-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(37, 65, 178, 0.3);
+    }
+    
+    .welcome-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+        animation: pulse 15s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.5); opacity: 0.1; }
+        100% { transform: scale(1); opacity: 0.3; }
+    }
+    
+    /* Additional CSS styles here... */
+    /* (Rest of your CSS) */
+    /* Custom Animation Styles */
+    .welcome-card {
+        background: linear-gradient(135deg, #4a6bff, #2541b2);
+        color: white;
+        box-shadow: 0 10px 20px rgba(37, 65, 178, 0.2);
+        border: none;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .welcome-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(37, 65, 178, 0.3);
+    }
+    
+    .welcome-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+        animation: pulse 15s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.5); opacity: 0.1; }
+        100% { transform: scale(1); opacity: 0.3; }
+    }
+    
+    .card {
+        border-radius: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+        background: #f8f9fa;
+        border-bottom: none;
+        padding: 1.2rem 1.5rem;
+        font-weight: 600;
+    }
+    
+    .card-header h2 {
+        font-size: 1.25rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .card-header h2 i {
+        color: #4a6bff;
+    }
+    
+    .stats-number {
+        display: block;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #4a6bff;
+        margin-bottom: 0.5rem;
+        animation: countUp 2s ease-out;
+    }
+    
+    @keyframes countUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stats-label {
+        font-size: 1rem;
+        color: #6c757d;
+        display: block;
+    }
+    
+    .btn {
+        border-radius: 50px;
+        padding: 0.6rem 1.2rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .btn-primary {
+        background: #4a6bff;
+        border-color: #4a6bff;
+    }
+    
+    .btn-primary:hover {
+        background: #3451cc;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(74, 107, 255, 0.4);
+    }
+    
+    .btn-success {
+        background: #28c76f;
+        border-color: #28c76f;
+    }
+    
+    .btn-success:hover {
+        background: #1f9d57;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 199, 111, 0.4);
+    }
+    
+    .btn-light {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: transparent;
+        color: white;
+    }
+    
+    .btn-light:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+    
+    .btn-outline-light {
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+    }
+    
+    .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+    
+    .getting-started-step {
+        display: flex;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.5s ease forwards;
+    }
+    
+    .getting-started-step:hover {
+        background: #f8f9fa;
+    }
+    
+    .getting-started-step:nth-child(1) { animation-delay: 0.1s; }
+    .getting-started-step:nth-child(2) { animation-delay: 0.3s; }
+    .getting-started-step:nth-child(3) { animation-delay: 0.5s; }
+    .getting-started-step:nth-child(4) { animation-delay: 0.7s; }
+    
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .step-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: #4a6bff;
+        color: white;
+        border-radius: 50%;
+        font-weight: 700;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .step-content {
+        flex: 1;
+    }
+    
+    .step-content h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .step-content p {
+        margin: 0;
+        color: #6c757d;
+    }
+    
+    /* Notification Bell */
+    .notification-bell {
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff5050;
+        color: white;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse-red 2s infinite;
+    }
+    
+    @keyframes pulse-red {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 80, 80, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 80, 80, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 80, 80, 0); }
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .action-button {
+        background: #f8f9fa;
+        border: none;
+        border-radius: 8px;
+        padding: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #343a40;
+        transition: all 0.3s ease;
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+    }
+    
+    .action-button:hover {
+        background: #4a6bff;
+        color: white;
+        transform: translateY(-3px);
+    }
+    
+    .action-button i {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+        color: #4a6bff;
+        transition: color 0.3s ease;
+    }
+    
+    .action-button:hover i {
+        color: white;
+    }
+    
+    .action-button span {
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    /* Dashboard Item Animation */
+    .dashboard-item {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .dashboard-item:nth-child(1) { animation-delay: 0.1s; }
+    .dashboard-item:nth-child(2) { animation-delay: 0.2s; }
+    .dashboard-item:nth-child(3) { animation-delay: 0.3s; }
+    
+    @keyframes fadeIn {
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Low Stock Indicator */
+    .low-stock {
+        background: #ffe0e0;
+        border-left: 4px solid #ff5050;
+        padding: 0.8rem;
+        border-radius: 4px;
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .low-stock i {
+        color: #ff5050;
+    }
+    
+    /* Activity Timeline */
+    .activity-timeline {
+        position: relative;
+        padding-left: 25px;
+        margin-top: 1rem;
+    }
+    
+    .activity-timeline::before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 1rem;
+    }
+    
+    .timeline-dot {
+        position: absolute;
+        left: -25px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #4a6bff;
+        top: 4px;
+    }
+    
+    .timeline-content {
+        background: #f8f9fa;
+        padding: 0.8rem;
+        border-radius: 8px;
+    }
+    
+    .timeline-time {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+    
+    /* Progress Bar */
+    .progress {
+        height: 8px;
+        margin-top: 0.5rem;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        background: #4a6bff;
+        animation: progressAnimation 1s ease-in-out;
+    }
+    
+    @keyframes progressAnimation {
+        from { width: 0; }
+    }
+    
+    /* Status Badge */
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-active {
+        background: rgba(40, 199, 111, 0.1);
+        color: #28c76f;
+    }
+    
+    /* Data Charts Container */
+    .chart-container {
+        height: 200px;
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    /* Search Bar Animation */
+    .search-bar {
+        transition: all 0.3s ease;
+        border-radius: 50px;
+        border: 1px solid #ced4da;
+        overflow: hidden;
+    }
+    
+    .search-bar:focus-within {
+        box-shadow: 0 0 0 4px rgba(74, 107, 255, 0.2);
+        border-color: #4a6bff;
+    }
+    
+    .search-input {
+        border: none;
+        padding: 0.6rem 1rem;
+        width: 100%;
+        outline: none;
+    }
+    
+    /* Weather Widget */
+    .weather-widget {
+        background: linear-gradient(135deg, #72EDF2, #5151E5);
+        color: white;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .weather-widget::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .weather-temp {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-right: 1rem;
+    }
+    
+    /* Floating Action Button */
+    .fab {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: #4a6bff;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 10px rgba(74, 107, 255, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+    
+    .fab:hover {
+        transform: scale(1.1) rotate(45deg);
+        box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
 <div class="row mb-4">
-    <div class="col-md-12">
-        <div class="card welcome-card">
-            <div class="card-body">
-                <h1><i class="fas fa-boxes me-2"></i>Welcome to InventoryPro</h1>
-                <p>A modern, comprehensive inventory management system designed to streamline your business operations</p>
-                <div class="mt-4">
-                    <a href="{{ url_for('new_product') }}" class="btn btn-light me-2">
-                        <i class="fas fa-plus me-1"></i> Add New Product
-                    </a>
-                    <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-outline-light">
-                        <i class="fas fa-exchange-alt me-1"></i> New Transaction
-                    </a>
-                </div>
+  <div class="col-md-12">
+    <div class="card welcome-card">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h1><i class="fas fa-boxes me-2"></i> Welcome to InventoryPro</h1>
+            <p class="lead">A modern, comprehensive inventory management system designed to streamline your business operations.</p>
+            <div class="mt-4">
+              <a href="{{ url_for('new_product') }}" class="btn btn-light me-2">
+                <i class="fas fa-plus me-1"></i> Add New Product
+              </a>
+              <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-outline-light">
+                <i class="fas fa-exchange-alt me-1"></i> New Transaction
+              </a>
             </div>
+          </div>
+          <div class="notification-bell">
+            <!-- (Optional) Additional notification icon specific to dashboard -->
+          </div>
         </div>
+        <!-- Quick Actions -->
+        <div class="quick-actions mt-4">
+          <a href="#" class="action-button">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
+          </a>
+          <a href="#" class="action-button">
+            <i class="fas fa-truck-loading"></i>
+            <span>Suppliers</span>
+          </a>
+          <a href="#" class="action-button">
+            <i class="fas fa-users"></i>
+            <span>Customers</span>
+          </a>
+          <a href="#" class="action-button">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Reports</span>
+          </a>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Search Bar -->
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="search-bar position-relative">
+      <input type="text" class="search-input form-control" placeholder="Search products, categories, or transactions...">
+      <i class="fas fa-search search-icon"></i>
+    </div>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-lg-4 col-md-6">
-        <div class="card h-100">
-            <div class="card-header">
-                <h2><i class="fas fa-tags"></i> Categories</h2>
-            </div>
-            <div class="card-body text-center">
-                <span class="stats-number">{{ category_count }}</span>
-                <span class="stats-label">Total Categories</span>
-                <hr>
-                <div class="d-grid gap-2 mt-3">
-                    <a href="{{ url_for('list_categories') }}" class="btn btn-primary">
-                        <i class="fas fa-list me-1"></i> View Categories
-                    </a>
-                    <a href="{{ url_for('new_category') }}" class="btn btn-success">
-                        <i class="fas fa-plus me-1"></i> Add New Category
-                    </a>
-                </div>
-            </div>
+  <!-- Categories Card -->
+  <div class="col-lg-4 col-md-6 dashboard-item mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h2><i class="fas fa-tags"></i> Categories</h2>
+      </div>
+      <div class="card-body text-center">
+        <span class="stats-number">{{ category_count }}</span>
+        <span class="stats-label d-block">Total Categories</span>
+        <div class="progress my-3">
+          <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-    </div>
-    
-    <div class="col-lg-4 col-md-6">
-        <div class="card h-100">
-            <div class="card-header">
-                <h2><i class="fas fa-box"></i> Products</h2>
-            </div>
-            <div class="card-body text-center">
-                <span class="stats-number">{{ product_count }}</span>
-                <span class="stats-label">Total Products</span>
-                <hr>
-                <div class="d-grid gap-2 mt-3">
-                    <a href="{{ url_for('list_products') }}" class="btn btn-primary">
-                        <i class="fas fa-search me-1"></i> View Products
-                    </a>
-                    <a href="{{ url_for('new_product') }}" class="btn btn-success">
-                        <i class="fas fa-plus me-1"></i> Add New Product
-                    </a>
-                </div>
-            </div>
+        <small class="text-muted">75% of target categories created</small>
+        <hr>
+        <div class="d-grid gap-2 mt-3">
+          <a href="{{ url_for('list_categories') }}" class="btn btn-primary">
+            <i class="fas fa-list me-1"></i> View Categories
+          </a>
+          <a href="{{ url_for('new_category') }}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i> Add New Category
+          </a>
         </div>
+      </div>
     </div>
-    
-    <div class="col-lg-4 col-md-6">
-        <div class="card h-100">
-            <div class="card-header">
-                <h2><i class="fas fa-exchange-alt"></i> Transactions</h2>
-            </div>
-            <div class="card-body text-center">
-                <span class="stats-number"><i class="fas fa-sync-alt"></i></span>
-                <span class="stats-label">Manage Inventory Movement</span>
-                <hr>
-                <div class="d-grid gap-2 mt-3">
-                    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-primary">
-                        <i class="fas fa-list-alt me-1"></i> View Transactions
-                    </a>
-                    <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-success">
-                        <i class="fas fa-plus me-1"></i> New Transaction
-                    </a>
-                </div>
-            </div>
+  </div>
+
+  <!-- Products Card -->
+  <div class="col-lg-4 col-md-6 dashboard-item mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h2><i class="fas fa-box"></i> Products</h2>
+      </div>
+      <div class="card-body text-center">
+        <span class="stats-number">{{ product_count }}</span>
+        <span class="stats-label d-block">Total Products</span>
+        <div class="low-stock my-3">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>5 products are low in stock</div>
         </div>
+        <hr>
+        <div class="d-grid gap-2 mt-3">
+          <a href="{{ url_for('list_products') }}" class="btn btn-primary">
+            <i class="fas fa-search me-1"></i> View Products
+          </a>
+          <a href="{{ url_for('new_product') }}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i> Add New Product
+          </a>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Transactions Card -->
+  <div class="col-lg-4 col-md-6 dashboard-item mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h2><i class="fas fa-exchange-alt"></i> Transactions</h2>
+      </div>
+      <div class="card-body text-center">
+        <span class="stats-number"><i class="fas fa-sync-alt fa-spin"></i></span>
+        <span class="stats-label d-block">Manage Inventory Movement</span>
+        <div class="activity-timeline mt-3">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div>Stock received - Office Supplies</div>
+              <div class="timeline-time">10 minutes ago</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div>Sale completed - Electronics</div>
+              <div class="timeline-time">2 hours ago</div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="d-grid gap-2 mt-3">
+          <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-primary">
+            <i class="fas fa-list-alt me-1"></i> View Transactions
+          </a>
+          <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i> New Transaction
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="row mt-4">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-map-signs"></i> Getting Started</h2>
-            </div>
-            <div class="card-body">
-                <div class="getting-started-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>Create Categories</h3>
-                        <p>Start by creating logical categories to organize your inventory items. Well-structured categories make product management easier.</p>
-                    </div>
-                </div>
-                
-                <div class="getting-started-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>Add Products</h3>
-                        <p>Add your products with detailed information and assign them to the appropriate categories.</p>
-                    </div>
-                </div>
-                
-                <div class="getting-started-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>Update Inventory</h3>
-                        <p>Manage your inventory by updating product quantities as needed.</p>
-                    </div>
-                </div>
-                
-                <div class="getting-started-step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h3>Record Transactions</h3>
-                        <p>Keep track of all inventory movements by recording purchases, sales, and adjustments through the transaction system.</p>
-                    </div>
-                </div>
-            </div>
+  <!-- Getting Started Steps -->
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-map-signs"></i> Getting Started</h2>
+      </div>
+      <div class="card-body">
+        <div class="getting-started-step mb-3">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Create Categories</h3>
+            <p>Start by creating logical categories to organize your inventory items. Well-structured categories make product management easier.</p>
+            <span class="status-badge status-active">Completed</span>
+          </div>
         </div>
+        <div class="getting-started-step mb-3">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Add Products</h3>
+            <p>Add your products with detailed information and assign them to the appropriate categories.</p>
+          </div>
+        </div>
+        <div class="getting-started-step mb-3">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Update Inventory</h3>
+            <p>Manage your inventory by updating product quantities as needed.</p>
+          </div>
+        </div>
+        <div class="getting-started-step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Record Transactions</h3>
+            <p>Keep track of all inventory movements by recording purchases, sales, and adjustments through the transaction system.</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  
+  <!-- Optional: System Status Widget -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-server"></i> System Status</h2>
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+          <div>Database</div>
+          <div class="text-success"><i class="fas fa-circle fa-xs"></i> Online</div>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <div>API Service</div>
+          <div class="text-success"><i class="fas fa-circle fa-xs"></i> Online</div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div>Backup System</div>
+          <div class="text-success"><i class="fas fa-circle fa-xs"></i> Active</div>
+        </div>
+        <div class="text-center mt-3">
+          <small class="text-muted">Last updated: Today, 2:30 PM</small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

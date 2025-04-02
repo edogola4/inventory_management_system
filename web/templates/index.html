@@ -1,76 +1,128 @@
-
 {% extends 'base.html' %}
 {% block title %}InventoryPro - Home{% endblock %}
 {% block content %}
-<div class="row">
+<div class="row mb-4">
     <div class="col-md-12">
-        <div class="card mb-4">
+        <div class="card welcome-card">
             <div class="card-body">
-                <h1 class="card-title">Welcome to InventoryPro</h1>
-                <p class="card-text">A comprehensive inventory management system</p>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2>Categories</h2>
-            </div>
-            <div class="card-body">
-                <p>You have <strong>{{ category_count }}</strong> categories in your inventory.</p>
-                <div class="d-grid gap-2">
-                    <a href="{{ url_for('list_categories') }}" class="btn btn-primary">View Categories</a>
-                    <a href="{{ url_for('new_category') }}" class="btn btn-success">Add New Category</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2>Products</h2>
-            </div>
-            <div class="card-body">
-                <p>You have <strong>{{ product_count }}</strong> products in your inventory.</p>
-                <div class="d-grid gap-2">
-                    <a href="{{ url_for('list_products') }}" class="btn btn-primary">View Products</a>
-                    <a href="{{ url_for('new_product') }}" class="btn btn-success">Add New Product</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2>Transactions</h2>
-            </div>
-            <div class="card-body">
-                <p>Manage your inventory purchases and sales.</p>
-                <div class="d-grid gap-2">
-                    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-primary">View
-                        Transactions</a>
-                    <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-success">New
-                        Transaction</a>
+                <h1><i class="fas fa-boxes me-2"></i>Welcome to InventoryPro</h1>
+                <p>A modern, comprehensive inventory management system designed to streamline your business operations</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('new_product') }}" class="btn btn-light me-2">
+                        <i class="fas fa-plus me-1"></i> Add New Product
+                    </a>
+                    <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-outline-light">
+                        <i class="fas fa-exchange-alt me-1"></i> New Transaction
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <div class="row">
+    <div class="col-lg-4 col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h2><i class="fas fa-tags"></i> Categories</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="stats-number">{{ category_count }}</span>
+                <span class="stats-label">Total Categories</span>
+                <hr>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('list_categories') }}" class="btn btn-primary">
+                        <i class="fas fa-list me-1"></i> View Categories
+                    </a>
+                    <a href="{{ url_for('new_category') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i> Add New Category
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h2><i class="fas fa-box"></i> Products</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="stats-number">{{ product_count }}</span>
+                <span class="stats-label">Total Products</span>
+                <hr>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('list_products') }}" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i> View Products
+                    </a>
+                    <a href="{{ url_for('new_product') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i> Add New Product
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h2><i class="fas fa-exchange-alt"></i> Transactions</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="stats-number"><i class="fas fa-sync-alt"></i></span>
+                <span class="stats-label">Manage Inventory Movement</span>
+                <hr>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-primary">
+                        <i class="fas fa-list-alt me-1"></i> View Transactions
+                    </a>
+                    <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i> New Transaction
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h2>Getting Started</h2>
+                <h2><i class="fas fa-map-signs"></i> Getting Started</h2>
             </div>
             <div class="card-body">
-                <ol>
-                    <li>Start by creating categories for your products</li>
-                    <li>Add your products to the appropriate categories</li>
-                    <li>Manage your inventory by updating product quantities</li>
-                    <li>Record purchases and sales through transactions</li>
-                </ol>
+                <div class="getting-started-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Create Categories</h3>
+                        <p>Start by creating logical categories to organize your inventory items. Well-structured categories make product management easier.</p>
+                    </div>
+                </div>
+                
+                <div class="getting-started-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Add Products</h3>
+                        <p>Add your products with detailed information and assign them to the appropriate categories.</p>
+                    </div>
+                </div>
+                
+                <div class="getting-started-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Update Inventory</h3>
+                        <p>Manage your inventory by updating product quantities as needed.</p>
+                    </div>
+                </div>
+                
+                <div class="getting-started-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Record Transactions</h3>
+                        <p>Keep track of all inventory movements by recording purchases, sales, and adjustments through the transaction system.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -4,7 +4,9 @@ from models.transaction import TransactionType
 from services.transaction_service import TransactionService
 from services.product_service import ProductService
 from utils.db import get_session
+from models.product import Product
 
+# Change the URL prefix to be the main transactions endpoint for the web interface
 transaction_bp = Blueprint('transactions', __name__, url_prefix='/transactions')
 
 @transaction_bp.route('/')
@@ -12,6 +14,11 @@ def list_transactions():
     with get_session() as session:
         service = TransactionService(session)
         transactions = service.get_all_transactions()
+        # Load all transaction items with their products for display
+        for transaction in transactions:
+            # Ensure transaction items and their products are loaded
+            for item in transaction.transaction_items:
+                product = item.product
         return render_template('transactions/list.html', transactions=transactions)
 
 @transaction_bp.route('/new', methods=['GET', 'POST'])
@@ -38,13 +45,16 @@ def create_transaction():
                     reference_number=reference_number,
                     notes=notes
                 )
-                
                 flash('Transaction created successfully!', 'success')
                 return redirect(url_for('transactions.list_transactions'))
             except ValueError as e:
                 flash(str(e), 'danger')
-                
-        return render_template('transactions/new.html', products=products, transaction_types=TransactionType)
+        
+        return render_template(
+            'transactions/new.html', 
+            products=products, 
+            transaction_types=[t for t in TransactionType]
+        )
 
 @transaction_bp.route('/<int:transaction_id>')
 def view_transaction(transaction_id):

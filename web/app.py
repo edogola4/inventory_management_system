@@ -1,8 +1,6 @@
+# web/app.py
 from flask import Flask, render_template, request, redirect, url_for, flash
-#from sqlalchemy import Engine
-#from sqlalchemy import engine
 from sqlalchemy import create_engine
-#from models import Category, Product, Transaction, Supplier, init_db
 from models import Category, Product, Transaction, Supplier, SessionLocal, init_db  # <-- Corrected import
 from datetime import datetime
 from models.base import Base
@@ -10,42 +8,19 @@ from routes import transaction, supplier, stock_alert
 from web.routes.transaction_routes import transaction_bp
 from routes.transaction import router as transaction_router
 
-
-
-# Create database tables
-#Base.metadata.create_all(bind=Engine)
-#Base.metadata.create_all(bind=engine)
-
-#engine = create_engine("sqlite:///inventory.db", echo=True)
 engine = create_engine("sqlite:///inventory.db", echo=True)
-
 Base.metadata.create_all(bind=engine)
 
-#app = FastAPI(title="Inventory Management System")
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = 'inventory_pro_secret_key'
 
 
-# Add CORS middleware
-#app.add_middleware(
-  #  CORSMiddleware, # type: ignore
-   # allow_origins=["*"],
-   # allow_credentials=True,
-  #  allow_methods=["*"],
-  #  allow_headers=["*"],
-#)
-
 # Include routers
-#app.include_router(transaction.router)     # Add transaction routes
 app.register_blueprint(transaction.router)
-#app.include_router(supplier.router)        # Add supplier routes
 app.register_blueprint(supplier.router)
-#app.include_router(stock_alert.router)    # Add stock alerts routes
 app.register_blueprint(stock_alert.router)
-
 app.register_blueprint(transaction_bp)
-#app.register_blueprint(transaction_router)
 
 
 # Initialize database
@@ -247,6 +222,37 @@ def delete_product(id):
         flash(f"Error deleting product: {str(e)}", "error")
     
     return redirect(url_for('list_products'))
+
+@app.route('/products/<int:id>/update', methods=['POST'])
+def update_product(id):
+    product = Product.find_by_id(id)
+    if not product:
+        flash(f"Product with ID {id} not found", "error")
+        return redirect(url_for('list_products'))
+    try:
+        name = request.form['name']
+        price = float(request.form['price'])
+        quantity = int(request.form['quantity'])
+        description = request.form.get('description', '')
+        category_id = int(request.form['category_id'])
+        
+        if not Category.find_by_id(category_id):
+            flash(f"Category with ID {category_id} does not exist", "error")
+            return redirect(url_for('edit_product', id=product.id))
+        
+        product.update(
+            name=name,
+            price=price,
+            quantity=quantity,
+            description=description,
+            category_id=category_id
+        )
+        flash("Product updated successfully!", "success")
+        return redirect(url_for('view_product', id=product.id))
+    except (ValueError, TypeError) as e:
+        flash(str(e), "error")
+        return redirect(url_for('edit_product', id=product.id))
+
 
 @app.route('/categories/<int:category_id>/products')
 def list_products_by_category(category_id):

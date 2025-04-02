@@ -1,52 +1,122 @@
-<!-- web/templates/transactions/new.html -->
+<!-- templates/transactions/new.html -->
 {% extends 'base.html' %}
 
 {% block title %}New Transaction{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>New Transaction</h1>
-    
-    <form method="POST">
-        <div class="form-group">
-            <label for="transaction_type">Transaction Type</label>
-            <select name="transaction_type" id="transaction_type" class="form-control" required>
-                <option value="{{ transaction_types.PURCHASE.value }}">Purchase</option>
-                <option value="{{ transaction_types.SALE.value }}">Sale</option>
-            </select>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Create New Transaction</h1>
+        <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-secondary">Back to List</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="transaction_type" class="form-label">Transaction Type</label>
+                        <select class="form-select" id="transaction_type" name="transaction_type" required>
+                            <option value="" selected disabled>Select a type</option>
+                            {% for type in transaction_types %}
+                            <option value="{{ type.value }}">{{ type.value|capitalize }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="reference_number" class="form-label">Reference Number</label>
+                        <input type="text" class="form-control" id="reference_number" name="reference_number" 
+                               placeholder="Optional reference/invoice number">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="product_id" class="form-label">Product</label>
+                        <select class="form-select" id="product_id" name="product_id" required>
+                            <option value="" selected disabled>Select a product</option>
+                            {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }} (Current Stock: {{ product.quantity }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="price_per_unit" class="form-label">Price Per Unit</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="price_per_unit" name="price_per_unit" 
+                                   step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary">Create Transaction</button>
+                </div>
+            </form>
         </div>
-        
-        <div class="form-group">
-            <label for="product_id">Product</label>
-            <select name="product_id" id="product_id" class="form-control" required>
-                {% for product in products %}
-                <option value="{{ product.id }}">{{ product.name }} (Current stock: {{ product.quantity }})</option>
-                {% endfor %}
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="quantity">Quantity</label>
-            <input type="number" name="quantity" id="quantity" class="form-control" min="1" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="price_per_unit">Price Per Unit ($)</label>
-            <input type="number" name="price_per_unit" id="price_per_unit" class="form-control" step="0.01" min="0.01" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="reference_number">Reference Number</label>
-            <input type="text" name="reference_number" id="reference_number" class="form-control">
-        </div>
-        
-        <div class="form-group">
-            <label for="notes">Notes</label>
-            <textarea name="notes" id="notes" class="form-control" rows="3"></textarea>
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Create Transaction</button>
-        <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-secondary">Cancel</a>
-    </form>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add validation or additional functionality if needed
+    const transactionTypeSelect = document.getElementById('transaction_type');
+    const quantityInput = document.getElementById('quantity');
+    const productSelect = document.getElementById('product_id');
+
+    transactionTypeSelect.addEventListener('change', function() {
+        // You could add logic here to show/hide supplier field based on transaction type
+        // Or to adjust validation rules
+    });
+
+    // Basic client-side validation when product changes
+    productSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const stockInfo = selectedOption.text.match(/Current Stock: (\d+)/);
+        
+        if (stockInfo && stockInfo[1]) {
+            const currentStock = parseInt(stockInfo[1]);
+            
+            // If it's a sale, restrict quantity to current stock
+            transactionTypeSelect.addEventListener('change', function() {
+                if (this.value === 'sale') {
+                    quantityInput.max = currentStock;
+                    quantityInput.setAttribute('data-max-stock', currentStock);
+                } else {
+                    quantityInput.removeAttribute('max');
+                }
+            });
+            
+            // Check if transaction type is already set to sale
+            if (transactionTypeSelect.value === 'sale') {
+                quantityInput.max = currentStock;
+                quantityInput.setAttribute('data-max-stock', currentStock);
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

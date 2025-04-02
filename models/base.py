@@ -8,7 +8,7 @@ from config import DATABASE_URI  # Ensure this is defined correctly
 engine = create_engine(DATABASE_URI, echo=True)
 
 # Use scoped_session for thread safety
-SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+SessionLocal = scoped_session(sessionmaker(autocommit=False, expire_on_commit=False, autoflush=False, bind=engine))
 
 # Base model
 Base = declarative_base()

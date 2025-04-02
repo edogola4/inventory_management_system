@@ -1,9 +1,12 @@
-# routes/transaction.py
+# routes/transaction.py 
 from flask import Blueprint, request, jsonify, abort, make_response
 from models.base import get_db
 from controllers import transaction as transaction_controller
+from models.transaction import TransactionType
+from models.product import Product
 
-router = Blueprint('transaction', __name__, url_prefix='/transactions')
+# Change the URL prefix to avoid conflict with the web routes
+router = Blueprint('transaction_api', __name__, url_prefix='/api/transactions')
 
 @router.route('/', methods=['POST'])
 def create_transaction():
@@ -39,6 +42,6 @@ def delete_transaction(transaction_id):
         success = transaction_controller.delete_transaction(db, transaction_id)
         if not success:
             abort(404, description="Transaction not found")
+        return '', 204
     except ValueError as e:
         abort(400, description=str(e))
-    return '', 204

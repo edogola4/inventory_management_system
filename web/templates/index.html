@@ -1,47 +1,9 @@
 {% extends 'base.html' %}
-
 {% block title %}InventoryPro - Home{% endblock %}
 
 {% block head %}
-  {{ super() }}
-  <style>
-    /* Custom Animation Styles */
-    .welcome-card {
-        background: linear-gradient(135deg, #4a6bff, #2541b2);
-        color: white;
-        box-shadow: 0 10px 20px rgba(37, 65, 178, 0.2);
-        border: none;
-        overflow: hidden;
-        position: relative;
-        transition: all 0.3s ease;
-    }
-    
-    .welcome-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(37, 65, 178, 0.3);
-    }
-    
-    .welcome-card::after {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200px;
-        height: 200px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        z-index: 0;
-        animation: pulse 15s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 0.3; }
-        50% { transform: scale(1.5); opacity: 0.1; }
-        100% { transform: scale(1); opacity: 0.3; }
-    }
-    
-    /* Additional CSS styles here... */
-    /* (Rest of your CSS) */
+{{ super() }}
+<style>
     /* Custom Animation Styles */
     .welcome-card {
         background: linear-gradient(135deg, #4a6bff, #2541b2);
@@ -495,222 +457,323 @@
         transform: scale(1.1) rotate(45deg);
         box-shadow: 0 6px 15px rgba(74, 107, 255, 0.4);
     }
-  </style>
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="row mb-4">
-  <div class="col-md-12">
-    <div class="card welcome-card">
-      <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <h1><i class="fas fa-boxes me-2"></i> Welcome to InventoryPro</h1>
-            <p class="lead">A modern, comprehensive inventory management system designed to streamline your business operations.</p>
-            <div class="mt-4">
-              <a href="{{ url_for('new_product') }}" class="btn btn-light me-2">
-                <i class="fas fa-plus me-1"></i> Add New Product
-              </a>
-              <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-outline-light">
-                <i class="fas fa-exchange-alt me-1"></i> New Transaction
-              </a>
+    <div class="col-md-12">
+        <div class="card welcome-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1><i class="fas fa-boxes me-2"></i>Welcome to InventoryPro</h1>
+                        <p class="lead">A modern, comprehensive inventory management system designed to streamline your business operations</p>
+                        <div class="mt-4">
+                            <a href="{{ url_for('new_product') }}" class="btn btn-light me-2">
+                                <i class="fas fa-plus me-1"></i> Add New Product
+                            </a>
+                            <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-outline-light">
+                                <i class="fas fa-exchange-alt me-1"></i> New Transaction
+                            </a>
+                        </div>
+                    </div>
+                    <div class="notification-bell">
+                    </div>
+                </div>
+                
+                <!-- Quick Actions --
+                <div class="quick-actions mt-4">
+                    <a href="#" class="action-button">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="fas fa-truck-loading"></i>
+                        <span>Suppliers</span>
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="fas fa-users"></i>
+                        <span>Customers</span>
+                    </a>
+                    <a href="#" class="action-button">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Reports</span>
+                    </a>
+                </div>-->
             </div>
-          </div>
-          <div class="notification-bell">
-            <!-- (Optional) Additional notification icon specific to dashboard -->
-          </div>
         </div>
-        <!-- Quick Actions -->
-        <div class="quick-actions mt-4">
-          <a href="#" class="action-button">
-            <i class="fas fa-chart-line"></i>
-            <span>Analytics</span>
-          </a>
-          <a href="#" class="action-button">
-            <i class="fas fa-truck-loading"></i>
-            <span>Suppliers</span>
-          </a>
-          <a href="#" class="action-button">
-            <i class="fas fa-users"></i>
-            <span>Customers</span>
-          </a>
-          <a href="#" class="action-button">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Reports</span>
-          </a>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <!-- Search Bar -->
 <div class="row mb-4">
-  <div class="col-md-12">
-    <div class="search-bar position-relative">
-      <input type="text" class="search-input form-control" placeholder="Search products, categories, or transactions...">
-      <i class="fas fa-search search-icon"></i>
+    <div class="col-md-12">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search products, categories, or transactions...">
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="row">
-  <!-- Categories Card -->
-  <div class="col-lg-4 col-md-6 dashboard-item mb-4">
-    <div class="card h-100">
-      <div class="card-header">
-        <h2><i class="fas fa-tags"></i> Categories</h2>
-      </div>
-      <div class="card-body text-center">
-        <span class="stats-number">{{ category_count }}</span>
-        <span class="stats-label d-block">Total Categories</span>
-        <div class="progress my-3">
-          <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-        <small class="text-muted">75% of target categories created</small>
-        <hr>
-        <div class="d-grid gap-2 mt-3">
-          <a href="{{ url_for('list_categories') }}" class="btn btn-primary">
-            <i class="fas fa-list me-1"></i> View Categories
-          </a>
-          <a href="{{ url_for('new_category') }}" class="btn btn-success">
-            <i class="fas fa-plus me-1"></i> Add New Category
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Products Card -->
-  <div class="col-lg-4 col-md-6 dashboard-item mb-4">
-    <div class="card h-100">
-      <div class="card-header">
-        <h2><i class="fas fa-box"></i> Products</h2>
-      </div>
-      <div class="card-body text-center">
-        <span class="stats-number">{{ product_count }}</span>
-        <span class="stats-label d-block">Total Products</span>
-        <div class="low-stock my-3">
-          <i class="fas fa-exclamation-triangle"></i>
-          <div>5 products are low in stock</div>
-        </div>
-        <hr>
-        <div class="d-grid gap-2 mt-3">
-          <a href="{{ url_for('list_products') }}" class="btn btn-primary">
-            <i class="fas fa-search me-1"></i> View Products
-          </a>
-          <a href="{{ url_for('new_product') }}" class="btn btn-success">
-            <i class="fas fa-plus me-1"></i> Add New Product
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Transactions Card -->
-  <div class="col-lg-4 col-md-6 dashboard-item mb-4">
-    <div class="card h-100">
-      <div class="card-header">
-        <h2><i class="fas fa-exchange-alt"></i> Transactions</h2>
-      </div>
-      <div class="card-body text-center">
-        <span class="stats-number"><i class="fas fa-sync-alt fa-spin"></i></span>
-        <span class="stats-label d-block">Manage Inventory Movement</span>
-        <div class="activity-timeline mt-3">
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div>Stock received - Office Supplies</div>
-              <div class="timeline-time">10 minutes ago</div>
+    <div class="col-lg-4 col-md-6 dashboard-item">
+        <div class="card h-100">
+            <div class="card-header">
+                <h2><i class="fas fa-tags"></i> Categories</h2>
             </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div>Sale completed - Electronics</div>
-              <div class="timeline-time">2 hours ago</div>
+            <div class="card-body text-center">
+                <span class="stats-number">{{ category_count }}</span>
+                <span class="stats-label">Total Categories</span>
+                
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div class="text-start mt-2 mb-3">
+                    <small class="text-muted">75% of target categories created</small>
+                </div>
+                
+                <hr>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('list_categories') }}" class="btn btn-primary">
+                        <i class="fas fa-list me-1"></i> View Categories
+                    </a>
+                    <a href="{{ url_for('new_category') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i> Add New Category
+                    </a>
+                </div>
             </div>
-          </div>
         </div>
-        <hr>
-        <div class="d-grid gap-2 mt-3">
-          <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-primary">
-            <i class="fas fa-list-alt me-1"></i> View Transactions
-          </a>
-          <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-success">
-            <i class="fas fa-plus me-1"></i> New Transaction
-          </a>
-        </div>
-      </div>
     </div>
-  </div>
+    
+    <div class="col-lg-4 col-md-6 dashboard-item">
+        <div class="card h-100">
+            <div class="card-header">
+                <h2><i class="fas fa-box"></i> Products</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="stats-number">{{ product_count }}</span>
+                <span class="stats-label">Total Products</span>
+                
+                <!-- Low Stock Indicator -->
+                <div class="low-stock">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>5 products are low in stock</div>
+                </div>
+                
+                <hr>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('list_products') }}" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i> View Products
+                    </a>
+                    <a href="{{ url_for('new_product') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i> Add New Product
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-md-6 dashboard-item">
+        <div class="card h-100">
+            <div class="card-header">
+                <h2><i class="fas fa-exchange-alt"></i> Transactions</h2>
+            </div>
+            <div class="card-body text-center">
+                <span class="stats-number"><i class="fas fa-sync-alt fa-spin"></i></span>
+                <span class="stats-label">Manage Inventory Movement</span>
+                
+                <!-- Recent Activity Timeline -->
+                <div class="activity-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div>Stock received - Office Supplies</div>
+                            <div class="timeline-time">10 minutes ago</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <div>Sale completed - Electronics</div>
+                            <div class="timeline-time">2 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-primary">
+                        <i class="fas fa-list-alt me-1"></i> View Transactions
+                    </a>
+                    <a href="{{ url_for('transactions.create_transaction') }}" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i> New Transaction
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row mt-4">
-  <!-- Getting Started Steps -->
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-header">
-        <h2><i class="fas fa-map-signs"></i> Getting Started</h2>
-      </div>
-      <div class="card-body">
-        <div class="getting-started-step mb-3">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Create Categories</h3>
-            <p>Start by creating logical categories to organize your inventory items. Well-structured categories make product management easier.</p>
-            <span class="status-badge status-active">Completed</span>
-          </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-map-signs"></i> Getting Started</h2>
+            </div>
+            <div class="card-body">
+                <div class="getting-started-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Create Categories</h3>
+                        <p>Start by creating logical categories to organize your inventory items. Well-structured categories make product management easier.</p>
+                        <span class="status-badge status-active">Completed</span>
+                    </div>
+                </div>
+                
+                <div class="getting-started-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Add Products</h3>
+                        <p>Add your products with detailed information and assign them to the appropriate categories.</p>
+                    </div>
+                </div>
+                
+                <div class="getting-started-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Update Inventory</h3>
+                        <p>Manage your inventory by updating product quantities as needed.</p>
+                    </div>
+                </div>
+                
+                <div class="getting-started-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Record Transactions</h3>
+                        <p>Keep track of all inventory movements by recording purchases, sales, and adjustments through the transaction system.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="getting-started-step mb-3">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Add Products</h3>
-            <p>Add your products with detailed information and assign them to the appropriate categories.</p>
-          </div>
-        </div>
-        <div class="getting-started-step mb-3">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Update Inventory</h3>
-            <p>Manage your inventory by updating product quantities as needed.</p>
-          </div>
-        </div>
-        <div class="getting-started-step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h3>Record Transactions</h3>
-            <p>Keep track of all inventory movements by recording purchases, sales, and adjustments through the transaction system.</p>
-          </div>
-        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Weather Widget -->
+<div class="weather-widget mb-4" id="weatherWidget">
+    <div class="d-flex align-items-center">
+      <span class="weather-temp" id="weatherTemp"></span>
+      <div>
+        <div id="weatherCondition"></div>
+        <small id="weatherLocation"></small>
       </div>
     </div>
   </div>
-  
-  <!-- Optional: System Status Widget -->
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-header">
-        <h2><i class="fas fa-server"></i> System Status</h2>
-      </div>
-      <div class="card-body">
-        <div class="d-flex justify-content-between mb-2">
-          <div>Database</div>
-          <div class="text-success"><i class="fas fa-circle fa-xs"></i> Online</div>
+        
+        <!-- System Status -->
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-server"></i> System Status</h2>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <div>Database</div>
+                    <div class="text-success"><i class="fas fa-circle fa-xs"></i> Online</div>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <div>API Service</div>
+                    <div class="text-success"><i class="fas fa-circle fa-xs"></i> Online</div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div>Backup System</div>
+                    <div class="text-success"><i class="fas fa-circle fa-xs"></i> Active</div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">Last updated: Today, 2:30 PM</small>
+                </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-between mb-2">
-          <div>API Service</div>
-          <div class="text-success"><i class="fas fa-circle fa-xs"></i> Online</div>
-        </div>
-        <div class="d-flex justify-content-between">
-          <div>Backup System</div>
-          <div class="text-success"><i class="fas fa-circle fa-xs"></i> Active</div>
-        </div>
-        <div class="text-center mt-3">
-          <small class="text-muted">Last updated: Today, 2:30 PM</small>
-        </div>
-      </div>
     </div>
-  </div>
 </div>
+
+<!-- Floating Action Button -->
+<div class="fab">
+    <i class="fas fa-plus"></i>
+</div>
+
+<!-- Add JavaScript for Animations and Interactions -->
+<script>
+    // When the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Notification Bell Interaction
+        document.querySelector('.notification-bell').addEventListener('click', function() {
+            alert('You have 3 new notifications:\n- Low stock alert for 5 products\n- 2 new transactions pending review\n- System backup completed');
+        });
+        
+        // Floating Action Button
+        document.querySelector('.fab').addEventListener('click', function() {
+            const actions = ['Add Product', 'New Transaction', 'Create Category', 'Generate Report'];
+            const actionList = actions.map((action, index) => `${index + 1}. ${action}`).join('\n');
+            const selection = prompt(`Quick Actions:\n${actionList}\n\nEnter number (1-4):`);
+            
+            if (selection) {
+                alert(`You selected: ${actions[parseInt(selection) - 1] || 'Invalid option'}`);
+            }
+        });
+        
+        // Search functionality placeholder
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                alert(`Searching for: ${this.value}`);
+            }
+        });
+        
+        // Simulate loading stats with counter animation
+        const statsNumbers = document.querySelectorAll('.stats-number');
+        statsNumbers.forEach(function(statEl) {
+            if (statEl.innerText && !isNaN(statEl.innerText)) {
+                const finalValue = parseInt(statEl.innerText);
+                let currentValue = 0;
+                const increment = Math.ceil(finalValue / 20);
+                const interval = setInterval(function() {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        clearInterval(interval);
+                        statEl.innerText = finalValue;
+                    } else {
+                        statEl.innerText = currentValue;
+                    }
+                }, 50);
+            }
+        });
+
+        // weather
+        const apiKey = '26b2430f405955f492e1f2e45fa3a8e6';
+  const city = document.getElementById('cityInput').value; // You can change the city or get it dynamically
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+  fetch(apiUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Update the weather widget with the real data
+      const temperature = Math.round(data.main.temp);
+      const condition = data.weather[0].main;
+      const location = data.name;
+
+      document.getElementById('weatherTemp').textContent = `${temperature}°`;
+      document.getElementById('weatherCondition').textContent = condition;
+      document.getElementById('weatherLocation').textContent = location;
+    })
+    .catch(error => {
+      console.error('Error fetching weather data:', error);
+      // Optionally display a fallback message or default weather data
+    });
+    });
+</script>
 {% endblock %}

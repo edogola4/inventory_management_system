@@ -8,7 +8,7 @@
         <h1>{{ product.name }}</h1>
         <ul class="list-group">
             <li class="list-group-item"><strong>ID:</strong> {{ product.id }}</li>
-            <li class="list-group-item"><strong>Price:</strong> ${{ "%.2f"|format(product.price) }}</li>
+            <li class="list-group-item"><strong>Price:</strong> KSH {{ "%.2f"|format(product.price) }}</li>
             <li class="list-group-item"><strong>Quantity:</strong> {{ product.quantity }}</li>
             <li class="list-group-item"><strong>Category:</strong>
                 <a href="{{ url_for('view_category', id=product.category.id) }}">

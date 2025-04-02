@@ -30,7 +30,7 @@
                 <tr>
                     <td>{{ product.id }}</td>
                     <td>{{ product.name }}</td>
-                    <td>${{ "%.2f"|format(product.price) }}</td>
+                    <td>KSH {{ "%.2f"|format(product.price) }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>
                         <a href="{{ url_for('view_category', id=product.category.id) }}">

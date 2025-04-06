@@ -42,7 +42,7 @@ pipenv run python run.py products add-product
 
 ```
 # Start the web interface
-pipenv run python app.py
+pipenv run python run.py
 ```
 
 Then open your browser to http://localhost:5000
